@@ -1,0 +1,27 @@
+# Core Streamlit web app
+streamlit
+
+# Data manipulation
+pandas
+numpy
+
+# Visualization
+matplotlib
+seaborn
+
+# Machine learning & NLP
+scikit-learn
+xgboost
+nltk
+imbalanced-learn
+
+# Serialization / File handling
+pickle-mixin
+joblib
+
+# Utilities
+contractions
+json5
+
+
+
