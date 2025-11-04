@@ -59,11 +59,21 @@ The 3 datasets used  for the notebooks are
 
 *__2.1 Imporrting libraries__*
 
+<<<<<<< HEAD
 We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearn, contractions, joblib, json, nltk and others which we used to help understand and read our datasets.
 
 *__2.2 Loading the data__*
 
 All the 3 datasets were loaded using the pandas library and made into dataframes for easier viewing and manipulation for the prurposes of making the Aurally App.
+=======
+We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearncontrctions and others which we used to help understand and read our datasets.
+
+*__2.2 Loading the data__*
+
+### Notebbok 1 - Music.ipynb
+
+Data is from Kaggle and the dataset is called `278k_labelled_uri.csv.zip` Its a music based dataset.
+>>>>>>> d5665f86286287e97b779e6331937ac1f5f4485a
 
 *__2.3 Initial Exploration And EDA__*
 
@@ -73,12 +83,17 @@ The features used in this dataset include 'danceability', 'energy', 'loudness', 
 
 Visualisaations were created so as to see the datatypes and label distribution. A statistical summary table was made to show the statistics of the audio features of the dataset.
 
+<<<<<<< HEAD
 A boxplot was made to show the outliers of the audio features.
 
 2. The "Spotify_Youtube.csv.zip" dataset had 20,718 rows and 28 columns. 16 were numerical columns and 12 were categorical. Most of the columns had missing data
 
 3. The phrases dataset "music_app.csv" had 229 rows with 3 columns. 1 Column was numerical and 2 are categorical.
 
+=======
+
+A boxplot was made to show the outliers of the audio features
+>>>>>>> d5665f86286287e97b779e6331937ac1f5f4485a
 
 ## 3. Data Preparation
 
@@ -89,6 +104,7 @@ A boxplot was made to show the outliers of the audio features.
 The mood labels are as follows:- 0: Sad 1: Happy 2: Energetic 3. Calm
 
 Outliers were removed using iqr to improve accuracy
+
 
 Duplicated rows were dropped and only one of any duplicated rows was left.
 
@@ -108,6 +124,11 @@ The Columns were nomalised to lowercase and extra spaces removed by replacing wi
 
 The phrase column was cleaned by converting it to lowercase, handling contractions, removing URls, mentions, hashtags, non-ascii characters specific symbols and extra spaces.
 A cleaned phrase column was created and the phrase column dropped. Empty rows were also dropped.
+
+
+
+Duplicated rows where also removed
+### 3.2 Data Inspection
 
 
 ### 3.2 Cleaning Summary
