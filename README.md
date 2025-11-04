@@ -63,21 +63,28 @@ We imported python libraries from panda, numpy, matplotlib, seaborn, colection, 
 
 *__2.2 Loading the data__*
 
-All the 3 datasets were loaded using the pandas library and made into dataframes for easier viewing and manipulation.
+All the 3 datasets were loaded using the pandas library and made into dataframes for easier viewing and manipulation for the prurposes of making the Aurally App.
 
 *__2.3 Initial Exploration And EDA__*
-*__2.3.2 Dataset summary__*
 
-The dataset contains 277938 rows and 15 columns. It had no missing or duplicated values. 14 columns were numerical and 1 text.
+
+1. The "278k_labelled_uri.csv.zip" dataset contains 277938 rows and 15 columns. It had no missing or duplicated values. 14 columns were numerical and 1 text.
 The features used in this dataset include 'danceability', 'energy', 'loudness', 'speechiness' 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', and 'duration (ms)'
 
 Visualisaations were created so as to see the datatypes and label distribution. A statistical summary table was made to show the statistics of the audio features of the dataset.
 
-A boxplot was made to show the outliers of the audio features
+A boxplot was made to show the outliers of the audio features.
+
+2. The "Spotify_Youtube.csv.zip" dataset had 20,718 rows and 28 columns. 16 were numerical columns and 12 were categorical. Most of the columns had missing data
+
+3. The phrases dataset "music_app.csv" had 229 rows with 3 columns. 1 Column was numerical and 2 are categorical.
+
 
 ## 3. Data Preparation
 
 ### 3.1 Data Cleaning
+
+1. __Cleaning  the "278k_labelled_uri.csv.zip" dataset__.
 
 The mood labels are as follows:- 0: Sad 1: Happy 2: Energetic 3. Calm
 
@@ -85,9 +92,22 @@ Outliers were removed using iqr to improve accuracy
 
 Duplicated rows were dropped and only one of any duplicated rows was left.
 
-We filtered to around 10- 20k for better analysis and perfomance.
+We filtered to around 80k tracks for better analysis and perfomance.
 
 Rows with missing values were filled with numerical columns filled with their median and categorical columns filled with their mode
+
+2. __Cleaning the "Spotify_Youtube.csv.zip" datset__.
+
+The columns not required for our dataset were dropped and the rows with missing feature values were also dropped.
+
+Columns were manipulated to be lowercase for uniformity and duplicates checked and appeaared to have none.
+
+3. __Claning the "music_df" dataset__
+
+The Columns were nomalised to lowercase and extra spaces removed by replacing with underscore.
+
+The phrase column was cleaned by converting it to lowercase, handling contractions, removing URls, mentions, hashtags, non-ascii characters specific symbols and extra spaces.
+A cleaned phrase column was created and the phrase column dropped. Empty rows were also dropped.
 
 
 ### 3.2 Cleaning Summary
