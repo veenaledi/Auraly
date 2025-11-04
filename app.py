@@ -55,47 +55,71 @@ def load_data():
         return None, None, None, None, None
 
 def get_mood_from_phrase(user_input, tfidf_vectorizer, tfidf_matrix, tfidf_phrases):
-    """Convert user phrase to mood using TF-IDF similarity"""
+    """Convert user phrase to mood using enhanced keyword matching + TF-IDF similarity"""
     try:
+        import re
+
         # Clean and lowercase user input
-        user_input_clean = user_input.lower().strip()
-        
-        # Check if it's a direct mood keyword first
-        direct_moods = ['happy', 'sad', 'energetic', 'calm']
-        for mood in direct_moods:
-            if mood in user_input_clean:
-                return mood, 1.0
-        
-        # Transform user input using TF-IDF
+        user_input_clean = re.sub(r'[^\w\s]', '', user_input.lower().strip())
+
+        # Enhanced keyword mapping for better accuracy
+        mood_keywords = {
+            'energetic': [
+                'gym', 'workout', 'exercise', 'running', 'energy', 'energetic', 'pump',
+                'intense', 'powerful', 'strong', 'adrenaline', 'hype', 'beast mode',
+                'cardio', 'hiit', 'training', 'motivated', 'power', 'explosive'
+            ],
+            'happy': [
+                'happy', 'joyful', 'cheerful', 'upbeat', 'positive', 'bright',
+                'sunny', 'fun', 'party', 'celebrate', 'excited', 'good vibes',
+                'mood boost', 'smile', 'dance', 'feel good'
+            ],
+            'calm': [
+                'calm', 'relax', 'chill', 'peaceful', 'tranquil', 'soothing',
+                'meditate', 'zen', 'quiet', 'serene', 'mellow', 'soft',
+                'focus', 'study', 'concentrate', 'ambient', 'unwind', 'destress'
+            ],
+            'sad': [
+                'sad', 'melancholy', 'melancholic', 'depressed', 'down', 'blue', 'heartbreak',
+                'crying', 'tears', 'lonely', 'miss', 'grief', 'somber',
+                'emotional', 'hurt', 'pain', 'breakup', 'reflection'
+            ]
+        }
+
+        # Keyword-based scoring
+        mood_scores = {
+            mood: sum(1 for keyword in keywords if keyword in user_input_clean)
+            for mood, keywords in mood_keywords.items()
+        }
+        mood_scores = {m: s for m, s in mood_scores.items() if s > 0}
+
+        if mood_scores:
+            best_mood = max(mood_scores, key=mood_scores.get)
+            confidence = min(mood_scores[best_mood] * 0.3, 1.0)
+            return best_mood, confidence
+
+        # Fallback to TF-IDF similarity
         user_vector = tfidf_vectorizer.transform([user_input_clean])
-        
-        # Calculate cosine similarity
         similarities = cosine_similarity(user_vector, tfidf_matrix).flatten()
-        
-        # Get the most similar phrase
         best_match_idx = similarities.argmax()
         confidence = similarities[best_match_idx]
-        
-        # Get the corresponding mood - try different column names
-        if 'mood' in tfidf_phrases.columns:
-            mood = tfidf_phrases.iloc[best_match_idx]['mood']
-        elif 'Mood' in tfidf_phrases.columns:
-            mood = tfidf_phrases.iloc[best_match_idx]['Mood']
-        elif 'label' in tfidf_phrases.columns:
-            mood = tfidf_phrases.iloc[best_match_idx]['label']
+
+        # Use 'mood_label' column explicitly
+        if 'mood_label' in tfidf_phrases.columns:
+            mood = tfidf_phrases.iloc[best_match_idx]['mood_label']
         else:
-            # Fallback: use the first column that's not the phrase
-            mood_col = [col for col in tfidf_phrases.columns if col.lower() not in ['phrase', 'text', 'cleaned_phrase']][0]
-            mood = tfidf_phrases.iloc[best_match_idx][mood_col]
-        
-        # If confidence is too low, return None
+            st.error("Column 'mood_label' not found in tfidf_phrases_lookup.csv")
+            return None, confidence
+
         if confidence < 0.1:
             return None, confidence
-        
+
         return mood, confidence
+
     except Exception as e:
         st.error(f"Error processing phrase: {str(e)}")
         return None, 0
+
 
 def generate_playlist(songs_df, mood, num_songs=15):
     """Generate playlist based on mood"""
@@ -103,7 +127,10 @@ def generate_playlist(songs_df, mood, num_songs=15):
         # Filter songs by mood
         mood_songs = songs_df[songs_df['mood_label'].str.lower() == mood.lower()].copy()
         
-        if len(mood_songs) == 0:
+        # Remove Duplicates
+        mood_songs = mood_songs.drop_duplicates(subset=['track', 'artist'])
+
+        if mood_songs.empty:
             return None
         
         # Mood-specific scoring weights
