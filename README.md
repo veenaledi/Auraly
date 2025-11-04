@@ -61,19 +61,21 @@ __Specific Objectives__
 
 *__2.1 Imporrting libraries__*
 
-We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearncontrctions and others which we used to help understand and read our data.
+We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearncontrctions and others which we used to help understand and read our datasets.
 
 *__2.2 Loading the data__*
+
+### Notebbok 1 - Music.ipynb
 
 Data is from Kaggle and the dataset is called `278k_labelled_uri.csv.zip` Its a music based dataset.
 
 *__2.3 Initial Exploration And EDA__*
-*__2.3.2 Dataset summary__*
 
 The dataset contains 277938 rows and 15 columns. It had no missing or duplicated values. 14 columns were numerical and 1 text.
 The features used in this dataset include 'danceability', 'energy', 'loudness', 'speechiness' 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', and 'duration (ms)'
 
 Visualisaations were created so as to see the datatypes and label distribution. A statistical summary table was made to show the statistics of the audio features of the dataset.
+
 
 A boxplot was made to show the outliers of the audio features
 
@@ -85,11 +87,17 @@ The mood labels are as follows:- 0: Sad 1: Happy 2: Energetic 3. Calm
 
 Outliers were removed using iqr to improve accuracy
 
+
 Duplicated rows were dropped and only one of any duplicated rows was left.
 
 We filtered to around 10- 20k for better analysis and perfomance.
 
 Rows with missing values were filled with numerical columns filled with their median and categorical columns filled with their mode
+
+
+
+Duplicated rows where also removed
+### 3.2 Data Inspection
 
 
 ### 3.2 Cleaning Summary
