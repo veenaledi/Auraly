@@ -1,18 +1,6 @@
 ## Capstone Project
-# Auraly
+# Auraly 
 
-This project has three Jupyter notebooks (Mood Model, Spotify Dataset, and Phrases) that come together to form the deployable Auraly app. 
-
-
-Each notebook produces a key artifact used in deployment:
-
-• Notebook 1 — Mood Model: Creates the XGBoost model (`auraly_xgb_model.pkl`), label map (`label_map.json`), and optional scaler. These files are used to classify songs by mood.
-
-• Notebook 2 — Clean Spotify Dataset: Produces the cleaned CSV (`spotify_mood_dataset.csv`) that contains all songs with predicted moods. This acts as the source for playlist generation.
-
-• Notebook 3 — Short Phrases: Generates TF-IDF files (`tfidf_vectorizer.pkl` `tfidf_phrase_matrix.pkl`, and `tfidf_phrases_lookup.csv`) to map user text inputs (e.g. 'morning focus') to moods.
-
-# NOTEBOOK 1
 
 ## 1.Business Understanding
 *__1.1 Overview__*
@@ -59,13 +47,23 @@ __Specific Objectives__
 
 ## 2. Data Understanding
 
+This project has three notebooks (Mood Model, Spotify Dataset, and Phrases) that come together to form the deployable Auraly app.
+
+The 3 datasets used  for the notebooks are
+
+1. "278k_labelled_uri.csv.zip" dataset from kaggle which creates the model to classify songs by mood. It will also be used to label the songs according to their mood.
+
+2. "Spotify_Youtube.csv.zip" dataset from kaggle which has songs from Spotify and Youtube that will act as the source for the playlist generator once cleaned and preproceesed.
+
+3. "music_app.csv"  datset which includes raw phrases collected from friends and potential users, which are then cleaned and preprocessed to map user text inputs (e.g. 'morning focus') to moods.
+
 *__2.1 Imporrting libraries__*
 
-We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearncontrctions and others which we used to help understand and read our data.
+We imported python libraries from panda, numpy, matplotlib, seaborn, colection, sklearn, contractions, joblib, json, nltk and others which we used to help understand and read our datasets.
 
 *__2.2 Loading the data__*
 
-Data is from Kaggle and the dataset is called `278k_labelled_uri.csv.zip` Its a music based dataset.
+All the 3 datasets were loaded using the pandas library and made into dataframes for easier viewing and manipulation.
 
 *__2.3 Initial Exploration And EDA__*
 *__2.3.2 Dataset summary__*
@@ -271,91 +269,6 @@ Success was achievd:
 4. Moving Forward, getting more data on under represented moods and improving on feature engineering so as to avoid misclassification
 
 
-# NOTEBOOK 2
-
-# Auraly - Mood Based Playlist Generator
-
-This notebook forms the core data-processing and playlist-generation pipeline for Auraly, a mood-based music recommendation application. It begins by loading and cleaning a large dataset containing Spotify and YouTube audio features, then applies a pre-trained XGBoost classifier (auraly_xgb_model.pkl), developed in the main modeling notebook, to predict the emotional mood of each track.
-The model classifies songs into four moods — happy, sad, energetic, and calm. Based on key audio and perceptual features such as energy, valence, tempo, loudness, and acousticness.
-
-After prediction, the dataset is fully normalized: column names are standardized, irrelevant metadata removed, missing values and duplicates dropped, and features aligned for consistency and deployment. The resulting clean dataset (spotify_df) serves as the foundation for generating personalized playlists. Each record links a song’s Spotify URI, artist, and essential audio features to its predicted mood label.
-
-The notebook then extends into a playlist-generation system that allows users to input either a mood keyword (e.g., “happy”) or a short descriptive phrase (e.g., “need calm focus music” or “upbeat gym vibes”). Through lightweight natural-language keyword matching and mood inference, the system maps user input to one of the four moods, ranks tracks within that category using mood-specific scoring weights (energy, valence, tempo, loudness, etc.), and outputs a curated list of around fifteen songs.
-
-In deployment, this logic can be integrated into a web interface, where users instantly receive Spotify playlist recommendations derived from the trained model and curated dataset.
-Overall, this notebook demonstrates the complete flow from data ingestion to deployable recommendation logic, bridging machine-learning mood classification with user-friendly playlist generation for real-world applications.
-
-Beyond individual users, producers, record labels, and local music platforms can leverage this workflow to classify and recommend their own catalogues. For example, Kenyan underground music or emerging regional artists can be automatically categorized by mood and surfaced to new audiences — making Auraly both a discovery and personalization tool for global and local music ecosystems.
-
-## Notebook Process
-
-* The necessary libraries were imported for analysis of this data i.e pandas, numpy, zipfile, warnings, XGBoost, joblib, json and warinings.
-
-* Our dataset is a zip file from https://www.kaggle.com/datasets/salvatorerastelli/spotify-and-youtube. Contents were extracted and data loaded to a data frame called spotify_data
-
-* Dataset had 20,718 records with 28 columns. It had 16 numerical columns and 28 categorical.
-
-* checked for missing values which prooved to be present in almost all columns.
-
-* Dropped unnecessary columns and dropped any rows with missing features. The columns became 16 numerical 10 and categorical 6. New dataframe became Spotify_df
-
-* Missing values where rechecked and duplicated values also checked and appeared to have none.
-
-* The trained model i.e XGBoost was loaded using joblib and the label map was also loaded using json.
-
-* A copy of the dataset was made  and called X_spotify and the 'duration(ms)' column was changed to 'duration(min)'. The necessary features to be used are danceability', 'energy', 'loudness', 'speechiness',  'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', 'duration_min'
-
-The moods were predicted using the X_spotify features 
-
-* Mood label count became 
-
-mood_label
-Happy        12579
-Sad           4701
-Energetic     2753
-Calm           683
-
-* A function was created to get the moods by song and it returned playlists from all the moods proving success in assigning moods to our songs.
-
-# NOTEBOOK 3
-
-# Notebook Overview:***
-
-
-This notebook implements the core phrase-to-playlist recommendation pipeline for Auraly, a music recommendation application based on mood. Its purpose is to allow users to receive personalized playlists by typing a mood keyword (e.g., “happy”) or a short descriptive phrase (e.g., “need calm focus music” or “upbeat gym vibes”).
-
-It begins with raw phrases collected from friends and potential users, which are then cleaned and preprocessed through steps such as duplicate removal, lemmatization, tokenization, removal of signs, and stop-word elimination. The resulting cleaned and tokenized phrase dataset (`phrases.csv`) maps each phrase to a corresponding mood label (`Sad`, `Happy`, `Energetic`, `Calm`). A TF-IDF vectorizer is applied to transform user-input phrases into numerical representations, which are compared against the phrase dataset using cosine similarity to get the most likely mood.
-
-The notebook also integrates a pre-processed song dataset (`spotify_mood_dataset.csv`) containing Spotify track features and pre-predicted mood labels. This was done in the 'Tracks.ipynb' file. Once a user’s mood is gotten from their input phrase, the system filters and ranks tracks within that mood based on audio and perceptual features such as energy, valence, and danceability. Playlists are then generated, typically containing about 10 curated songs.
-
-Special handling is included for ambiguous or unmatched phrases: if the system cannot confidently place a mood from the input (e.g., a rare or unseen keyword), it prompts the user to select from all four moods, ensuring a playlist can still be delivered.
-
-This notebook demonstrates the complete flow from raw user input to curated playlist output, bridging natural-language mood inference with a pre-classified song dataset. It enables users, producers, and music platforms to discover and experience music personalized by emotional context, enhancing both user engagement and music discovery, especially for niche or regional artists.
-
-
-## 1. Data Cleaning and Preprocessing.
-
-* Necessary libraries were imported for analyzing i.e pandas, numpy, matplotlib, seaborn, re, collections, warnings, contractions, sklearn, pickle and nltk.
-
-* Data had 229 rows and 3 columns which are Short phrase, mood and mood label.
-
-* There were no duplicated rows
-
-* A Function was defined to deal with column 'short phrase' and a new column was created called 'cleaned phrase'
-
-* The short phrase column was dropped
-
-* A preprocessing function was defined and a new column formed 'phrases'
-
-## 2. Mapping the Phrases
-
-* The phrases.csv and Spotify_mood_dataset files were loaded. The label map file was also loaded to show thw moods.
-* The phrases were vectorized using tfidf
-* A function was created to generate a playlist according to moods
-* A another fuction was also created to generate a playlist aaccording to phrase
-* The Functions were tested to see whether it would produce accurate outcomes.
-
-# **Phrase-Based Mood Playlist Generator
 
 ### Project Collaborators
 1. Neema Naledi (naledineema@gmail.com)
