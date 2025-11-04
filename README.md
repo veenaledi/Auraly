@@ -1,6 +1,6 @@
 ## Capstone Project
-# Auraly 
 
+# AURALLY - Music App
 
 ## 1.Business Understanding
 *__1.1 Overview__*
