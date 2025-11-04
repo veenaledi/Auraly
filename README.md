@@ -1,6 +1,6 @@
 ## Capstone Project
 
-# AURALLY - Music App
+# AURALY - Music App
 
 ## 1.Business Understanding
 *__1.1 Overview__*
@@ -51,9 +51,9 @@ This project has three notebooks (Mood Model, Spotify Dataset, and Phrases) that
 
 The 3 datasets used  for the notebooks are
 
-1. "278k_labelled_uri.csv.zip" dataset from kaggle which creates the model to classify songs by mood. It will also be used to label the songs according to their mood.
+1. "278k_labelled_uri.csv.zip" dataset from kaggle which creates the model that classifies songs by mood. It will also be used to map the label to their mood. Thsi will set the theme for the main notebook where the model will be created.
 
-2. "Spotify_Youtube.csv.zip" dataset from kaggle which has songs from Spotify and Youtube that will act as the source for the playlist generator once cleaned and preproceesed.
+2. "Spotify_Youtube.csv.zip" dataset from kaggle which has songs from Spotify and Youtube that will act as the source for the playlist generator once cleaned and proceesed.
 
 3. "music_app.csv"  datset which includes raw phrases collected from friends and potential users, which are then cleaned and preprocessed to map user text inputs (e.g. 'morning focus') to moods.
 
@@ -69,11 +69,12 @@ All the 3 datasets were loaded using the pandas library and made into dataframes
 
 
 1. The "278k_labelled_uri.csv.zip" dataset contains 277938 rows and 15 columns. It had no missing or duplicated values. 14 columns were numerical and 1 text.
-The features used in this dataset include 'danceability', 'energy', 'loudness', 'speechiness' 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', and 'duration (ms)'
 
-Visualisaations were created so as to see the datatypes and label distribution. A statistical summary table was made to show the statistics of the audio features of the dataset.
+   The features used in this dataset include 'danceability', 'energy', 'loudness', 'speechiness' 'acousticness', 'instrumentalness', 'liveness', 'valence', 'tempo', and 'duration (ms)'
 
-A boxplot was made to show the outliers of the audio features.
+   Visualisations were created so as to see the datatypes and label distribution. A statistical summary table was made to show the statistics of the audio features of the dataset.
+
+   Boxplots were visualized to show the outliers of the audio features.
 
 2. The "Spotify_Youtube.csv.zip" dataset had 20,718 rows and 28 columns. 16 were numerical columns and 12 were categorical. Most of the columns had missing data
 
@@ -88,35 +89,58 @@ A boxplot was made to show the outliers of the audio features.
 
 The mood labels are as follows:- 0: Sad 1: Happy 2: Energetic 3. Calm
 
-Outliers were removed using iqr to improve accuracy
+Outliers were removed using iqr to improve accuracy of the models.
 
+Duplicated rows were dropped to improve data quality aand have accurate representation.
 
-Duplicated rows were dropped and only one of any duplicated rows was left.
+We filtered the dataset to around 10-20k samples for better analysis and perfomance. Used a random_set = 42.
 
-We filtered to around 80k tracks for better analysis and perfomance.
+Rows with missing values were filled with numerical columns filled with their median and categorical columns filled with their mode.
 
-Rows with missing values were filled with numerical columns filled with their median and categorical columns filled with their mode
+After cleaning the dataframe was saved as 'cleaned_music_data.csv'
 
 2. __Cleaning the "Spotify_Youtube.csv.zip" datset__.
 
 The columns not required for our dataset were dropped and the rows with missing feature values were also dropped.
 
-Columns were manipulated to be lowercase for uniformity and duplicates checked and appeaared to have none.
+All columns were numalised to lowercase for uniformity and duplicates checked and appeaared to have none.
 
-3. __Claning the "music_df" dataset__
+The column for duration_ms was changed to duration_min.
+
+The trained model from the main notebook was loaded as well as the label map for the moods. The  model was used to predictthe expected features.
+
+A function was defined to try to generate a playlist using moods.
+
+The new data frame was saved to a csv file called 'spotify_mood_dataset.csv' that will be used for deploying.
+
+3. __Cleaning the "music_df" dataset__
 
 The Columns were nomalised to lowercase and extra spaces removed by replacing with underscore.
 
-The phrase column was cleaned by converting it to lowercase, handling contractions, removing URls, mentions, hashtags, non-ascii characters specific symbols and extra spaces.
-A cleaned phrase column was created and the phrase column dropped. Empty rows were also dropped.
+A function was created to transform the short phrase column by converting it to lowercase, handling contractions, removing URls, mentions, hashtags, non-ascii characters specific symbols and extra spaces.
 
+A cleaned_phrase column was created from the short phrase column and the short phrase column was dropped. Empty rows were also dropped Duplicated rows where also removed.
 
+A preprocessing function was defined for stopwords and for lematizing. A function was also created for assigning parts of speech(pos) of the cleaned_phrases column.
 
-Duplicated rows where also removed
-### 3.2 Data Inspection
+Another function was created for tokenising nad lematizing the cleaned_phrase column whereby a new column was created called phrases
+
+The cleaned_phrases column was dropped and the resulting data frame had 229 rows and 3 columns.
+
+A new dataframe was created called phrase_df and a csv file saved called 'phrases.csv'.
+
+The Phrases dataframe was mapped to their respective moods and mood_label using the file label_map.json.
+
+A column was created to turn the mood_label column into a string for maping and TF-IDF vectorizor used to transform the input phrase. We then compute cosine similarity between input and all phrases in dataset and find the index of the most similar phrase
+
+A function was defined for all moods to generate a playlist of 30 songs with an ambiguity_margin 0f 0.05 and a min_similarity of 0.01 for filtering out irrelevant results.
+
+Tests were done to show whether the vectorizor and phrase matrix worked and both were saved to "tfidf_vectorizer.pkl" and "tfidf_phrase_matrix.pkl" using pickle.dump for purposes of deploying.
 
 
 ### 3.2 Cleaning Summary
+
+ The main notebbok proceeds from here so as to come up with a model.
 
 The mood distribution showed that 'happy' with had the most songs followed by 'sad', then 'energetic and finally 'calm'.
 
