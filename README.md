@@ -140,7 +140,7 @@ Tests were done to show whether the vectorizor and phrase matrix worked and both
 
 ### 3.2 Cleaning Summary
 
- The main notebbok proceeds from here so as to come up with a model.
+ The main notebbok proceeds from here so as to come up with a model.git status
 
 The mood distribution showed that 'happy' with had the most songs followed by 'sad', then 'energetic and finally 'calm'.
 
@@ -148,9 +148,6 @@ The remaining features with outliers are tempo, energy, valence with highest fea
 
 Our final cleaned dataset had a set of 80,000 from 277,938 records. with 33, 030 outliers removed.
 
-### 3.3 Cleaned Data
-
-Our cleaned data was saved into a csv called 'cleaned_music_data.csv'
 
 
  ## 4. Further EDA
@@ -295,9 +292,11 @@ Forest Tree model was our non-linear baseline ensemble model and XGBoost was our
 
 ## 7.4 Limitations
 
+* Data collection - Due to restrictions from websites such as Spotify, it was dificult to collect the data we required hence forcing us to depend on datasets from Kaggle. Web scraping also did not achieve the required data for our project
+
 * Mood mislabelling - Even though the models performed well there was some misclassification of moods e.g happy being misclassified as energetic.
 
-* Class imbalance - Some moods were underrepresented like calm
+* Class imbalance - Some moods were underrepresented like calm  which made us generate data for it to be trained to be predicted
 
 * Context - Meaning of different sounds may be misclassified e.g 'am bad' can have a good meaning or its actually bad.
 
