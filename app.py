@@ -8,45 +8,229 @@ from sklearn.metrics.pairwise import cosine_similarity
 st.set_page_config(
     page_title="Auraly - Mood-Based Playlist Generator",
     page_icon="🎵",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Enhanced CSS for beautiful styling
 st.markdown("""
-    <style>
-    .main-header {
-        font-size: 3rem;
-        color: #1DB954;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-    .sub-header {
-        text-align: center;
-        color: #b3b3b3;
-        margin-bottom: 2rem;
-    }
-    </style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+.main {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    padding: 2rem;
+}
+
+.main-header {
+    font-size: 4rem;
+    font-weight: 700;
+    background: linear-gradient(120deg, #ff6ec4, #7873f5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 0;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInDown 0.8s ease-in;
+}
+
+.sub-header {
+    text-align: center;
+    color: #ffffff;
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+    animation: fadeInUp 0.8s ease-in;
+}
+
+.stAlert {
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    animation: slideInUp 0.5s ease-in;
+}
+
+.stTextInput > div > div > input {
+    border-radius: 25px;
+    border: 2px solid #ff6ec4;
+    padding: 15px 25px;
+    font-size: 1.1rem;
+    background: rgba(255,255,255,0.95);
+    transition: all 0.3s ease;
+}
+
+.stTextInput > div > div > input:focus {
+    border-color: #7873f5;
+    box-shadow: 0 0 20px rgba(120, 115, 245, 0.3);
+    transform: scale(1.02);
+}
+
+.stButton > button {
+    border-radius: 25px;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    color: white;
+    box-shadow: 0 8px 20px rgba(238, 9, 121, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stButton > button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(238, 9, 121, 0.4);
+    background: linear-gradient(135deg, #ee0979, #ff6a00);
+}
+
+.song-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    border-left: 5px solid #ff6ec4;
+}
+
+.song-card:hover {
+    transform: translateX(10px);
+    box-shadow: 0 8px 20px rgba(255, 110, 196, 0.4);
+}
+
+.song-number {
+    background: linear-gradient(135deg, #ff6ec4, #7873f5);
+    color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-right: 15px;
+}
+
+.song-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.song-artist {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+.stat-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.css-1d391kg, [data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #ff9a9e 0%, #fad0c4 100%);
+}
+
+.css-1d391kg p, [data-testid="stSidebar"] p {
+    color: #2c3e50;
+}
+
+.mood-badge {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 10px 0;
+    animation: pulse 2s infinite;
+}
+
+.mood-happy {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    color: white;
+}
+
+.mood-sad {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    color: white;
+}
+
+.mood-energetic {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    color: white;
+}
+
+.mood-calm {
+    background: linear-gradient(135deg, #c2e9fb 0%, #a1c4fd 100%);
+    color: #2c3e50;
+}
+
+@keyframes fadeInDown {
+    from {opacity: 0; transform: translateY(-30px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInUp {
+    from {opacity: 0; transform: translateY(30px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes slideInUp {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes pulse {
+    0%, 100% {transform: scale(1);}
+    50% {transform: scale(1.05);}
+}
+
+.stSlider > div > div > div {
+    background: linear-gradient(90deg, #ff6ec4, #7873f5);
+}
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+.spotify-embed {
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 10px 0;
+    box-shadow: 0 6px 18px rgba(255, 110, 196, 0.3);
+}
+</style>
 """, unsafe_allow_html=True)
 
-# Cache data loading to improve performance
+
+# Cache data loading
 @st.cache_data
 def load_data():
     """Load all necessary data files"""
     try:
-        # Load the song dataset
         songs_df = pd.read_csv('spotify_mood_dataset.csv')
-        
-        # Load phrase dataset
         phrases_df = pd.read_csv('phrases.csv')
         
-        # Load TF-IDF components
         with open('tfidf_vectorizer.pkl', 'rb') as f:
             tfidf_vectorizer = pickle.load(f)
         
         with open('tfidf_phrase_matrix.pkl', 'rb') as f:
             tfidf_matrix = pickle.load(f)
         
-        # Load TF-IDF phrases lookup
         tfidf_phrases = pd.read_csv('tfidf_phrases_lookup.csv')
         
         return songs_df, phrases_df, tfidf_vectorizer, tfidf_matrix, tfidf_phrases
@@ -57,12 +241,8 @@ def load_data():
 def get_mood_from_phrase(user_input, tfidf_vectorizer, tfidf_matrix, tfidf_phrases):
     """Convert user phrase to mood using enhanced keyword matching + TF-IDF similarity"""
     try:
-        import re
-
-        # Clean and lowercase user input
-        user_input_clean = re.sub(r'[^\w\s]', '', user_input.lower().strip())
-
-        # Enhanced keyword mapping for better accuracy
+        user_input_clean = user_input.lower().strip()
+        
         mood_keywords = {
             'energetic': [
                 'gym', 'workout', 'exercise', 'running', 'energy', 'energetic', 'pump',
@@ -80,60 +260,53 @@ def get_mood_from_phrase(user_input, tfidf_vectorizer, tfidf_matrix, tfidf_phras
                 'focus', 'study', 'concentrate', 'ambient', 'unwind', 'destress'
             ],
             'sad': [
-                'sad', 'melancholy', 'melancholic', 'depressed', 'down', 'blue', 'heartbreak',
+                'sad', 'melancholy', 'depressed', 'down', 'blue', 'heartbreak',
                 'crying', 'tears', 'lonely', 'miss', 'grief', 'somber',
                 'emotional', 'hurt', 'pain', 'breakup', 'reflection'
             ]
         }
-
-        # Keyword-based scoring
-        mood_scores = {
-            mood: sum(1 for keyword in keywords if keyword in user_input_clean)
-            for mood, keywords in mood_keywords.items()
-        }
-        mood_scores = {m: s for m, s in mood_scores.items() if s > 0}
-
+        
+        mood_scores = {}
+        for mood, keywords in mood_keywords.items():
+            score = sum(1 for keyword in keywords if keyword in user_input_clean)
+            if score > 0:
+                mood_scores[mood] = score
+        
         if mood_scores:
             best_mood = max(mood_scores, key=mood_scores.get)
             confidence = min(mood_scores[best_mood] * 0.3, 1.0)
             return best_mood, confidence
-
-        # Fallback to TF-IDF similarity
+        
         user_vector = tfidf_vectorizer.transform([user_input_clean])
         similarities = cosine_similarity(user_vector, tfidf_matrix).flatten()
+        
         best_match_idx = similarities.argmax()
         confidence = similarities[best_match_idx]
-
+        
         # Use 'mood_label' column explicitly
         if 'mood_label' in tfidf_phrases.columns:
             mood = tfidf_phrases.iloc[best_match_idx]['mood_label']
         else:
             st.error("Column 'mood_label' not found in tfidf_phrases_lookup.csv")
             return None, confidence
-
+        
         if confidence < 0.1:
             return None, confidence
-
+        
         return mood, confidence
-
+        
     except Exception as e:
         st.error(f"Error processing phrase: {str(e)}")
         return None, 0
 
-
 def generate_playlist(songs_df, mood, num_songs=15):
     """Generate playlist based on mood"""
     try:
-        # Filter songs by mood
         mood_songs = songs_df[songs_df['mood_label'].str.lower() == mood.lower()].copy()
         
-        # Remove Duplicates
-        mood_songs = mood_songs.drop_duplicates(subset=['track', 'artist'])
-
-        if mood_songs.empty:
+        if len(mood_songs) == 0:
             return None
         
-        # Mood-specific scoring weights
         if mood.lower() == 'happy':
             mood_songs['score'] = (
                 mood_songs['valence'] * 0.4 + 
@@ -165,7 +338,6 @@ def generate_playlist(songs_df, mood, num_songs=15):
         else:
             mood_songs['score'] = mood_songs['valence']
         
-        # Sort by score and get top songs
         top_songs = mood_songs.nlargest(num_songs, 'score')
         
         return top_songs
@@ -173,40 +345,70 @@ def generate_playlist(songs_df, mood, num_songs=15):
         st.error(f"Error generating playlist: {str(e)}")
         return None
 
+def get_mood_emoji(mood):
+    """Get emoji for mood"""
+    mood_emojis = {
+        'happy': '😊',
+        'sad': '😢',
+        'energetic': '⚡',
+        'calm': '😌'
+    }
+    return mood_emojis.get(mood.lower(), '🎵')
+
+def create_spotify_embed(track_uri):
+    """Create Spotify embed HTML"""
+    if pd.notna(track_uri) and 'spotify:track:' in str(track_uri):
+        track_id = track_uri.split(':')[-1]
+        return f'''
+        <div class="spotify-embed">
+            <iframe style="border-radius:12px" 
+                    src="https://open.spotify.com/embed/track/{track_id}?utm_source=generator&theme=0" 
+                    width="100%" 
+                    height="152" 
+                    frameBorder="0" 
+                    allowfullscreen="" 
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
+                    loading="lazy">
+            </iframe>
+        </div>
+        '''
+    return None
+
 # Main app
 def main():
-    # Header
+    # Header with animation
     st.markdown('<h1 class="main-header">🎵 Auraly</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Your Mood-Based Playlist Generator</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-header">Your AI-Powered Mood-Based Playlist Generator</p>', unsafe_allow_html=True)
     
     # Load data
-    with st.spinner('Loading music library...'):
+    with st.spinner('🎼 Loading music library...'):
         songs_df, phrases_df, tfidf_vectorizer, tfidf_matrix, tfidf_phrases = load_data()
     
     if songs_df is None:
-        st.error("Failed to load data. Please check your files.")
+        st.error("❌ Failed to load data. Please check your files.")
         return
     
-    st.success(f"Loaded {len(songs_df):,} songs across 4 moods")
+    st.success(f"✅ Loaded **{len(songs_df):,}** songs across **4 moods**")
     
-    # Create two columns for input
+    # Input section
     col1, col2 = st.columns([3, 1])
     
     with col1:
         user_input = st.text_input(
-            "How are you feeling?",
+            "🎭 How are you feeling?",
             placeholder="e.g., 'need calm focus music', 'upbeat gym vibes', or just 'happy'",
-            help="Describe your mood or simply enter a mood keyword (happy, sad, energetic, calm)"
+            help="Describe your mood or simply enter a mood keyword",
+            key="mood_input"
         )
     
     with col2:
-        num_songs = st.slider("Playlist size", 5, 30, 15)
+        num_songs = st.slider("📊 Playlist size", 5, 30, 15, key="playlist_size")
     
-    # Generate playlist button
-    if st.button("Generate Playlist", type="primary", use_container_width=True):
+    # Generate button
+    if st.button("🎧 Generate Playlist", type="primary", use_container_width=True):
         if user_input:
-            with st.spinner('Creating your perfect playlist...'):
-                # Get mood from phrase
+            with st.spinner('🎨 Crafting your perfect playlist...'):
+                # Get mood
                 mood, confidence = get_mood_from_phrase(
                     user_input, 
                     tfidf_vectorizer, 
@@ -215,86 +417,128 @@ def main():
                 )
                 
                 if mood:
-                    st.info(f"Detected Mood: **{mood.title()}** (Confidence: {confidence:.2%})")
+                    # Display mood with styled badge
+                    mood_class = f"mood-{mood.lower()}"
+                    emoji = get_mood_emoji(mood)
+                    st.markdown(f'''
+                        <div style="text-align: center; margin: 20px 0;">
+                            <span class="mood-badge {mood_class}">
+                                {emoji} Detected Mood: {mood.title()} (Confidence: {confidence:.0%})
+                            </span>
+                        </div>
+                    ''', unsafe_allow_html=True)
                     
                     # Generate playlist
                     playlist = generate_playlist(songs_df, mood, num_songs)
                     
                     if playlist is not None and len(playlist) > 0:
-                        st.success(f"Generated {len(playlist)} songs for you!")
+                        st.success(f"🎉 Generated **{len(playlist)}** perfect songs for you!")
                         
-                        # Display playlist
-                        st.markdown("### Your Playlist")
-                        
-                        for idx, row in enumerate(playlist.itertuples(), 1):
-                            col_a, col_b, col_c = st.columns([0.5, 3, 1])
-                            
-                            with col_a:
-                                st.markdown(f"**{idx}.**")
-                            
-                            with col_b:
-                                st.markdown(f"**{row.track}**")
-                                st.caption(f"by {row.artist}")
-                            
-                            with col_c:
-                                if hasattr(row, 'spotify_uri') and pd.notna(row.spotify_uri):
-                                    spotify_url = f"https://open.spotify.com/track/{row.spotify_uri.split(':')[-1]}"
-                                    st.markdown(f"[▶️ Play]({spotify_url})")
-                            
-                            st.divider()
-                        
-                        # Mood statistics
-                        st.markdown("### Playlist Characteristics")
+                        # Playlist stats
+                        st.markdown("### 📊 Playlist Characteristics")
                         stat_col1, stat_col2, stat_col3, stat_col4 = st.columns(4)
                         
                         with stat_col1:
-                            st.metric("Avg Energy", f"{playlist['energy'].mean():.2f}")
+                            st.metric("⚡ Energy", f"{playlist['energy'].mean():.2f}")
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        
                         with stat_col2:
-                            st.metric("Avg Valence", f"{playlist['valence'].mean():.2f}")
+                            st.metric("😊 Valence", f"{playlist['valence'].mean():.2f}")
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        
                         with stat_col3:
-                            st.metric("Avg Tempo", f"{playlist['tempo'].mean():.0f} BPM")
+                            st.metric("🎵 Tempo", f"{playlist['tempo'].mean():.0f} BPM")
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        
                         with stat_col4:
-                            st.metric("Avg Danceability", f"{playlist['danceability'].mean():.2f}")
+                            st.metric("💃 Danceability", f"{playlist['danceability'].mean():.2f}")
+                            st.markdown('</div>', unsafe_allow_html=True)
+                        
+                        st.markdown("---")
+                        
+                        # Display playlist with embeds
+                        st.markdown("### 🎶 Your Playlist")
+                        
+                        # Option to show Spotify embeds
+                        show_embeds = st.checkbox("🎵 Show Spotify Players (loads slower)", value=False)
+                        
+                        for idx, row in enumerate(playlist.itertuples(), 1):
+                            st.markdown(f'''
+                                <div class="song-card">
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; flex: 1;">
+                                            <div class="song-number">{idx}</div>
+                                            <div>
+                                                <div class="song-title">{row.track}</div>
+                                                <div class="song-artist">by {row.artist}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ''', unsafe_allow_html=True)
+                            
+                            # Show Spotify embed if enabled
+                            if show_embeds and hasattr(row, 'spotify_uri'):
+                                embed_html = create_spotify_embed(row.spotify_uri)
+                                if embed_html:
+                                    st.markdown(embed_html, unsafe_allow_html=True)
+                            elif hasattr(row, 'spotify_uri') and pd.notna(row.spotify_uri):
+                                track_id = str(row.spotify_uri).split(':')[-1]
+                                spotify_url = f"https://open.spotify.com/track/{track_id}"
+                                st.markdown(f"[▶️ Play on Spotify]({spotify_url})")
+                        
                     else:
-                        st.warning("No songs found for this mood. Try a different phrase!")
+                        st.warning("⚠️ No songs found for this mood. Try a different phrase!")
                 else:
-                    st.error("Could not detect mood. Please try again with a different phrase.")
+                    st.error("❌ Could not detect mood. Please try again with a different phrase.")
         else:
-            st.warning("Please enter a mood or phrase!")
+            st.warning("⚠️ Please enter a mood or phrase!")
     
-    # Sidebar with information
+    # Sidebar
     with st.sidebar:
-        st.markdown("## About Auraly")
+        st.markdown("## 🎵 About Auraly")
         st.markdown("""
-        Auraly uses machine learning to understand your mood and recommend the perfect playlist.
+        Auraly uses **machine learning** to understand your mood and recommend the perfect playlist.
         
-        **How it works:**
-        1. Enter how you're feeling
-        2. AI analyzes your phrase
-        3. Get a curated playlist matching your mood
+        ### 🚀 How it works:
+        1. **Enter** how you're feeling
+        2. **AI analyzes** your phrase
+        3. **Get** a curated playlist matching your mood
         
-        **Supported Moods:**
-        - Happy
-        - Sad
-        - Energetic
-        - Calm
+        ### 🎭 Supported Moods:
+        - 😊 **Happy** - Upbeat & joyful
+        - 😢 **Sad** - Melancholic & reflective
+        - ⚡ **Energetic** - High energy & intense
+        - 😌 **Calm** - Peaceful & relaxing
         """)
         
         st.markdown("---")
-        st.markdown("### Example Phrases")
+        
+        st.markdown("### 💡 Example Phrases")
         examples = [
-            "need calm focus music",
-            "upbeat gym vibes",
-            "feeling melancholic",
-            "party mood",
-            "relaxing evening"
+            ("need calm focus music", "😌"),
+            ("upbeat gym vibes", "⚡"),
+            ("feeling melancholic", "😢"),
+            ("party mood", "😊"),
+            ("relaxing evening", "😌"),
+            ("intense workout", "⚡")
         ]
-        for example in examples:
-            if st.button(f"{example}", key=example):
-                st.session_state.example_input = example
+
+        for example, emoji in examples:
+            if st.button(f"{emoji} {example}", key=f"example_{example}"):
+                st.session_state.mood_input = example
+                st.rerun()
         
         st.markdown("---")
-        st.caption(f"🎵 {len(songs_df):,} songs in library")
+        st.markdown(f"### 📊 Library Stats")
+        st.info(f"🎵 **{len(songs_df):,}** songs available")
+        
+        # Mood distribution
+        if 'mood' in songs_df.columns:
+            mood_counts = songs_df['mood'].value_counts()
+            for mood, count in mood_counts.items():
+                emoji = get_mood_emoji(mood)
+                st.write(f"{emoji} **{mood.title()}**: {count:,} songs")
 
 if __name__ == "__main__":
     main()
