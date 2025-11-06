@@ -78,7 +78,7 @@ All the 3 datasets were loaded using the pandas library and made into dataframes
 
 2. The "Spotify_Youtube.csv.zip" dataset had 20,718 rows and 28 columns. 16 were numerical columns and 12 were categorical. Most of the columns had missing data
 
-3. The phrases dataset "music_app.csv" had 229 rows with 3 columns. 1 Column was numerical and 2 are categorical.
+3. The phrases dataset "music_app.csv" had 229 rows with 3 columns. 1 column was numerical and 2 are categorical.
 
 
 ## 3. Data Preparation
@@ -89,13 +89,13 @@ All the 3 datasets were loaded using the pandas library and made into dataframes
 
 The mood labels are as follows:- 0: Sad 1: Happy 2: Energetic 3. Calm
 
-Outliers were removed using iqr to improve accuracy of the models.
+Outliers were removed using 'iqr' to improve accuracy of the models.
 
 Duplicated rows were dropped to improve data quality aand have accurate representation.
 
 We filtered the dataset to around 10-20k samples for better analysis and perfomance. Used a random_set = 42.
 
-Rows with missing values were filled with numerical columns filled with their median and categorical columns filled with their mode.
+Rows with missing values were filled, with numerical columns filled with their median and categorical columns filled with their mode.
 
 After cleaning the dataframe was saved as 'cleaned_music_data.csv'
 
@@ -115,7 +115,7 @@ The new data frame was saved to a csv file called 'spotify_mood_dataset.csv' tha
 
 3. __Cleaning the "music_df" dataset__
 
-The Columns were nomalised to lowercase and extra spaces removed by replacing with underscore.
+The Columns were nomalized to lowercase and extra spaces removed by replacing with underscore.
 
 A function was created to transform the short phrase column by converting it to lowercase, handling contractions, removing URls, mentions, hashtags, non-ascii characters specific symbols and extra spaces.
 
@@ -140,7 +140,7 @@ Tests were done to show whether the vectorizor and phrase matrix worked and both
 
 ### 3.2 Cleaning Summary
 
- The main notebbok proceeds from here so as to come up with a model.git status
+The main notebook proceeds from here so as to come up with a model to deploy.
 
 The mood distribution showed that 'happy' with had the most songs followed by 'sad', then 'energetic and finally 'calm'.
 
@@ -210,7 +210,7 @@ We used StandardScaler to scale 3 features namely 'loudness' 'tempo' and 'durati
 
 The scaler was used to fit all 3 models that is logistic Regression, XGBoost, and Random Forest.
 
-Smote was deployed to generate new data to deal with class imbalance
+SMOTE was deployed to generate new data to deal with class imbalance
 
 Dataframe was restored and its shape checked for the training set and testing set.
 
@@ -255,7 +255,7 @@ As the best perfoming model, XGBoost was tuned to see whether it would perfom be
 
 ## 6.6 Saving The Best Model
 
-The untuned XGBoost model perfomed better than the tuned model and thus was saved using joblib for deployment.
+The untuned XGBoost model performed better than the tuned model and thus was saved using joblib for deployment.
 
 # 7. Evaluation, Recommendation and Conclusion
 
