@@ -268,11 +268,11 @@ Forest Tree model was our non-linear baseline ensemble model and XGBoost was our
 
 ## 7.2 Evaluation
 
-* As from the result above, XGBoost lassifier ensemble model perfomed the best out of the the other 2 models achieving an accuracy of 94.4% with high f1-scores showing its ability to predict  the targets correctly. 
+* As from the result above, XGBoost classifier ensemble model performed the best out of the the other 2 models achieving an accuracy of 94.4% with high f1-scores showing its ability to predict  the targets correctly. 
 
-* Logistic regression had the lowest perfoming model accuracy of 81.3% with low f1-scores and Random Forest model had an accuracy of 92% with high .
+* Logistic regression had the lowest performing model accuracy of 81.3% with low f1-scores and Random Forest model had an accuracy of 92% with high .
 
-* After tuning the XGBoost Classifer model as the best model to have better predictions, it had a slightly lower accuracy of 93.5% than The untuned XGBoost Classsifer model which had 94.4% accuracy.
+* After tuning the XGBoost Classifier model as the best model to have better predictions, it had a slightly lower accuracy of 93.5% than The untuned XGBoost Classifer model which had 94.4% accuracy.
 
 * According to the confusion matrix, The untuned XGBoost ensemble model had the lowest false positives and false negatives meaning it predicts the moods better than the other models.
 
@@ -307,13 +307,13 @@ Forest Tree model was our non-linear baseline ensemble model and XGBoost was our
 
 In conclusion, we were able to achieve our main objective  by being able to develop a classification model that identifies the emotional mood of a song by its acoustic features. The models performed really well with the untuned XGBoost classifier outperforming the rest of the models.
 
-Success was achievd:
+Success was achieved:
 
 1. There was a high accuracy in identifying moods of songs using their acoustic features
 
-2. Users are able to get recommendation of songs based on their moods or are write a phase which the model can use to classify a mood and reccomend songs
+2. Users are able to get recommendation of songs based on their moods or are write a phase which the model can use to classify a mood and recomend songs
 
-3. Auraly once intergrated will be able to have personalised user experience and better interactions with users
+3. Auraly once integrated will be able to have personalized user experience and better interactions with users
 
 4. Moving Forward, getting more data on under represented moods and improving on feature engineering so as to avoid misclassification
 
