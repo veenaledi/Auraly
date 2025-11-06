@@ -257,12 +257,13 @@ def get_mood_from_phrase(user_input, tfidf_vectorizer, tfidf_matrix, tfidf_phras
             'calm': [
                 'calm', 'relax', 'chill', 'peaceful', 'tranquil', 'soothing',
                 'meditate', 'zen', 'quiet', 'serene', 'mellow', 'soft',
-                'focus', 'study', 'concentrate', 'ambient', 'unwind', 'destress'
+                'focus', 'study', 'concentrate', 'ambient', 'unwind', 'destress', 
+                'underwhelmed', 'Underwhelming'
             ],
             'sad': [
                 'sad', 'melancholy', 'depressed', 'down', 'blue', 'heartbreak',
-                'crying', 'tears', 'lonely', 'miss', 'grief', 'somber',
-                'emotional', 'hurt', 'pain', 'breakup', 'reflection'
+                'crying', 'tears', 'lonely', 'miss', 'grief', 'somber', 'betrayed'
+                'emotional', 'hurt', 'pain', 'breakup', 'reflection', 'Jealous'
             ]
         }
         
